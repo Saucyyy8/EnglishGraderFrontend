@@ -121,7 +121,7 @@ gradeBtn.addEventListener('click', async () => {
         const base64Images = await Promise.all(imagePromises);
 
         // Call Backend
-        const response = await fetch('https://englishgrader-production.up.railway.app/grade', {
+        const response = await fetch('https://englishgrader-production-2c9c.up.railway.app/grade', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
