@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -108,11 +109,6 @@
                         </div>
                     </div>
 
-                    <div class="feedback-block">
-                        <h3>Overall Feedback</h3>
-                        <p id="feedback-text" class="feedback-text">...</p>
-                    </div>
-
                     <div class="errors-block">
                         <h3>Detailed Corrections</h3>
                         <div id="errors-list" class="errors-list">
@@ -124,6 +120,21 @@
         </main>
     </div>
 
+    <!-- Image Crop Modal -->
+    <div id="crop-modal" class="crop-modal hidden">
+        <div class="crop-modal-content">
+            <h3>Crop Image</h3>
+            <div class="crop-container">
+                <img id="crop-image" src="" alt="Crop preview">
+            </div>
+            <div class="crop-actions">
+                <button id="crop-cancel" class="crop-btn cancel-btn">Cancel</button>
+                <button id="crop-done" class="crop-btn done-btn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="script.js"></script>
 </body>
 

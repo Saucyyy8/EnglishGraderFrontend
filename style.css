@@ -401,9 +401,42 @@ h3 {
 }
 
 .error-fix {
-    margin-top: 5px;
-    color: #86efac;
-    font-weight: 500;
+    display: block;
+}
+
+.crop-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.crop-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.done-btn {
+    background: var(--accent-gradient);
+    color: white;
+}
+
+.done-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
 }
 
 /* Responsive */

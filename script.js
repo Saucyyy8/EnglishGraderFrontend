@@ -44,26 +44,74 @@ cameraBtn.addEventListener('click', () => {
     fileInput.click();
 });
 
+// Crop modal elements
+const cropModal = document.getElementById('crop-modal');
+const cropImage = document.getElementById('crop-image');
+const cropDone = document.getElementById('crop-done');
+const cropCancel = document.getElementById('crop-cancel');
+let cropper = null;
+let currentFile = null;
+
 function handleFiles(files) {
     if (!files.length) return;
 
-    Array.from(files).forEach(file => {
-        if (!file.type.startsWith('image/')) return;
+    // Process first file for cropping
+    const file = files[0];
+    if (!file.type.startsWith('image/')) return;
 
-        selectedFiles.push(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        cropImage.src = e.target.result;
+        cropModal.classList.remove('hidden');
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <button class="remove-btn" onclick="removeFile('${file.name}')">×</button>
-            `;
-            previewContainer.appendChild(div);
-        };
-        reader.readAsDataURL(file);
+        // Initialize cropper
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(cropImage, {
+            aspectRatio: NaN, // Free crop
+            viewMode: 1,
+            autoCropArea: 1,
+        });
+
+        currentFile = file;
+    };
+    reader.readAsDataURL(file);
+}
+
+cropDone.addEventListener('click', () => {
+    if (!cropper) return;
+
+    cropper.getCroppedCanvas().toBlob((blob) => {
+        const croppedFile = new File([blob], currentFile.name, { type: currentFile.type });
+        addImageToPreview(croppedFile);
+        closeCropModal();
     });
+});
+
+cropCancel.addEventListener('click', closeCropModal);
+
+function closeCropModal() {
+    cropModal.classList.add('hidden');
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+    fileInput.value = ''; // Reset input
+}
+
+function addImageToPreview(file) {
+    selectedFiles.push(file);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button class="remove-btn" onclick="removeFile('${file.name}')">×</button>
+        `;
+        previewContainer.appendChild(div);
+    };
+    reader.readAsDataURL(file);
 
     updateButtonState();
 }
@@ -175,9 +223,6 @@ function displayResults(data) {
     }, 100);
 
     scoreText.textContent = `${score}/10`;
-
-    // Feedback
-    feedbackText.textContent = data.feedback || "No feedback provided.";
 
     // Errors
     errorsList.innerHTML = '';
