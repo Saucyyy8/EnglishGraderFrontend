@@ -38,6 +38,12 @@ fileInput.addEventListener('change', (e) => {
     handleFiles(e.target.files);
 });
 
+// Camera button
+const cameraBtn = document.getElementById('camera-btn');
+cameraBtn.addEventListener('click', () => {
+    fileInput.click();
+});
+
 function handleFiles(files) {
     if (!files.length) return;
 
