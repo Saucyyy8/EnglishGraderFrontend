@@ -80,11 +80,18 @@ function handleFiles(files) {
 cropDone.addEventListener('click', () => {
     if (!cropper) return;
 
-    cropper.getCroppedCanvas().toBlob((blob) => {
-        const croppedFile = new File([blob], currentFile.name, { type: currentFile.type });
+    // Get cropped canvas with max width constraint and compression
+    const canvas = cropper.getCroppedCanvas({
+        maxWidth: 1200, // Limit width to reduce file size
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+    });
+
+    canvas.toBlob((blob) => {
+        const croppedFile = new File([blob], currentFile.name, { type: 'image/jpeg' });
         addImageToPreview(croppedFile);
         closeCropModal();
-    });
+    }, 'image/jpeg', 0.85); // Convert to JPEG with 85% quality
 });
 
 cropCancel.addEventListener('click', closeCropModal);
@@ -147,6 +154,40 @@ document.querySelectorAll('input[name="question"]').forEach(radio => {
     radio.addEventListener('change', updateButtonState);
 });
 
+// --- Image Compression Helper ---
+async function compressImage(file, maxWidth = 1200, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Resize if needed
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert to compressed base64
+                const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedBase64);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 // --- API Integration ---
 
 gradeBtn.addEventListener('click', async () => {
@@ -162,17 +203,12 @@ gradeBtn.addEventListener('click', async () => {
     resultsSection.classList.add('hidden');
 
     try {
-        // Convert images to Base64
-        const imagePromises = selectedFiles.map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        });
-
-        const base64Images = await Promise.all(imagePromises);
+        // Compress and convert images to Base64
+        console.log('Compressing images...');
+        const base64Images = await Promise.all(
+            selectedFiles.map(file => compressImage(file))
+        );
+        console.log(`Compressed ${base64Images.length} images`);
 
         // Call Backend
         const response = await fetch('https://englishgrader-production-2c9c.up.railway.app/grade', {
