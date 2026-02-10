@@ -9,10 +9,13 @@ const errorsList = document.getElementById('errors-list');
 let selectedFiles = [];
 
 // Questions Text Mapping
+// Questions Text Mapping
 const questions = {
-    'question1': "You were recently returning from a three-day science camp when suddenly your bus driver took one wrong route after another. Narrate your experience – what exactly happened, what you saw, what you did, what you felt and what you learnt from the experience.",
-    'question2': "Write an original short story entitled: “Man often spoils what is good given to him, as he is often ruined by his pride.”",
-    'question3': "Children should take care of their ageing parents. Express your views either for or against the statement."
+    'question1': "Write an original story entitled “Lost and Found.”",
+    'question2': "Imagine a situation where your mother has been unwell and you had to help her. Explain what you did to help. What did you learn from the experience?",
+    'question3': "“Democracy cannot survive without education.” Express your views either for or against this statement.",
+    'question4': "You are a regular traveller in your school bus. Describe what you see on your way home from school each afternoon. Give details of the familiar sights and sounds you experience each day.",
+    'question5': "Study the picture given below. Write a short story or a description or an account of what it suggests to you. Your composition may be about the subject of the picture or you may take suggestions from it; however, your composition must have a clear connection with the picture."
 };
 
 // --- File Handling ---
