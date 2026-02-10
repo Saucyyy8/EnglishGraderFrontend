@@ -214,7 +214,7 @@ gradeBtn.addEventListener('click', async () => {
         console.log(`Compressed ${base64Images.length} images`);
 
         // Call Backend
-        const response = await fetch('https://englishgrader-production-2c9c.up.railway.app/grade', {
+        const response = await fetch('https://englishgrader.onrender.com/grade', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
