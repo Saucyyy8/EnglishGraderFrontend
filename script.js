@@ -248,7 +248,7 @@ function displayResults(data) {
 
     // Update Score Circle
     const score = data.score || 0;
-    const percentage = score * 10;
+    const percentage = (score / 20) * 100;
     const circle = document.querySelector('.circle');
     const scoreText = document.querySelector('.percentage');
 
@@ -257,12 +257,12 @@ function displayResults(data) {
     setTimeout(() => {
         circle.style.strokeDasharray = `${percentage}, 100`;
         // Color based on score
-        if (score >= 8) circle.style.stroke = "#22c55e"; // Green
-        else if (score >= 5) circle.style.stroke = "#eab308"; // Yellow
+        if (score >= 16) circle.style.stroke = "#22c55e"; // Green (>80%)
+        else if (score >= 10) circle.style.stroke = "#eab308"; // Yellow (>50%)
         else circle.style.stroke = "#ef4444"; // Red
     }, 100);
 
-    scoreText.textContent = `${score}/10`;
+    scoreText.textContent = `${score}/20`;
 
     // Errors
     errorsList.innerHTML = '';
