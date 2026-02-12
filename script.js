@@ -226,7 +226,8 @@ gradeBtn.addEventListener('click', async () => {
         });
 
         if (!response.ok) {
-            throw new Error(`Server Error: ${response.statusText}`);
+            const errorData = await response.json();
+            throw new Error(errorData.details || errorData.error || `Server Error: ${response.statusText}`);
         }
 
         const data = await response.json();
